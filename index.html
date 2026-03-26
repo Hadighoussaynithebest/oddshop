@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OddMart — Delightfully Random</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0f0e0c;--cream:#f5f0e8;--yellow:#f5c842;--rust:#c94a2e;--sage:#7a9e7e;--blue:#2d4b8e;--border:rgba(15,14,12,.12)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);overflow-x:hidden}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:200;background:var(--ink);display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--yellow);letter-spacing:2px;cursor:pointer}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{color:var(--cream);text-decoration:none;font-size:13px;font-weight:500;letter-spacing:.5px;text-transform:uppercase;opacity:.75;transition:opacity .2s}
+.nav-links a:hover{opacity:1}
+.nav-actions{display:flex;gap:12px;align-items:center}
+#navAccountBtn{background:transparent;border:1px solid rgba(245,240,232,.3);color:var(--cream);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;padding:7px 16px;letter-spacing:.5px;text-transform:uppercase;transition:all .2s}
+#navAccountBtn:hover{border-color:var(--yellow);color:var(--yellow)}
+#navCartBtn{background:var(--yellow);color:var(--ink);border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;padding:8px 20px;letter-spacing:.5px;text-transform:uppercase;transition:background .2s;position:relative}
+#navCartBtn:hover{background:#e6b800}
+.cart-badge{position:absolute;top:-6px;right:-6px;background:var(--rust);color:#fff;width:18px;height:18px;border-radius:50%;font-size:10px;font-weight:700;align-items:center;justify-content:center;display:none}
+
+/* HERO */
+.hero{display:grid;grid-template-columns:1fr 1fr;min-height:calc(100vh - 56px);overflow:hidden}
+.hero-left{background:var(--ink);display:flex;flex-direction:column;justify-content:flex-end;padding:60px 56px;position:relative;overflow:hidden}
+.hero-left::before{content:'ODD';font-family:'Bebas Neue',sans-serif;font-size:320px;color:rgba(255,255,255,.04);position:absolute;top:-40px;left:-20px;line-height:1;pointer-events:none;animation:drift 8s ease-in-out infinite alternate}
+@keyframes drift{from{transform:translateY(0)}to{transform:translateY(-20px)}}
+.hero-tag{font-size:11px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--yellow);margin-bottom:20px}
+.hero-title{font-family:'DM Serif Display',serif;font-size:clamp(48px,5vw,80px);color:var(--cream);line-height:1.05;margin-bottom:28px}
+.hero-title em{font-style:italic;color:var(--yellow)}
+.hero-desc{font-size:15px;line-height:1.7;color:rgba(245,240,232,.6);max-width:380px;margin-bottom:40px}
+.hero-cta{display:inline-flex;align-items:center;gap:12px;background:var(--rust);color:var(--cream);text-decoration:none;font-weight:500;font-size:14px;letter-spacing:.5px;text-transform:uppercase;padding:16px 32px;width:fit-content;transition:transform .2s,background .2s}
+.hero-cta:hover{background:#a83a20;transform:translateX(4px)}
+.hero-right{background:var(--yellow);position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.hero-right::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(0,0,0,.04) 20px,rgba(0,0,0,.04) 21px)}
+.hero-showcase{position:relative;z-index:1;text-align:center;animation:float 4s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-20px) rotate(2deg)}}
+.hero-emoji{font-size:160px;display:block;line-height:1;transition:transform .25s,opacity .25s}
+.hero-label{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--ink);margin-top:16px;opacity:.6}
+.hero-badge{position:absolute;top:40px;right:40px;z-index:2;background:var(--rust);color:var(--cream);width:90px;height:90px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;text-align:center;line-height:1.2;animation:spin 10s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hero-badge span{font-size:22px}
+
+/* TICKER */
+.ticker{background:var(--rust);color:var(--cream);overflow:hidden;height:40px;display:flex;align-items:center}
+.ticker-track{display:flex;animation:ticker 25s linear infinite;white-space:nowrap}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ticker-item{padding:0 32px;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;display:flex;align-items:center;gap:16px}
+.ticker-dot{width:4px;height:4px;background:var(--yellow);border-radius:50%}
+
+/* SECTIONS */
+.section-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:40px}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:2px}
+.section-link{font-size:13px;font-weight:500;letter-spacing:.5px;text-transform:uppercase;color:var(--rust);text-decoration:none;border-bottom:1px solid var(--rust);padding-bottom:2px;transition:opacity .2s}
+.section-link:hover{opacity:.7}
+
+/* PRODUCTS */
+.featured{padding:80px 56px}
+.product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.product-card{cursor:pointer}
+.product-img{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:72px;margin-bottom:16px;position:relative;transition:transform .3s}
+.product-card:hover .product-img{transform:translateY(-4px)}
+.product-tag{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--sage);margin-bottom:6px}
+.product-name{font-family:'DM Serif Display',serif;font-size:18px;margin-bottom:4px}
+.product-sub{font-size:13px;color:rgba(15,14,12,.5);margin-bottom:12px}
+.product-bottom{display:flex;align-items:center;justify-content:space-between}
+.product-price{font-weight:500;font-size:16px}
+.product-add{width:36px;height:36px;background:var(--ink);color:var(--cream);border:none;cursor:pointer;font-size:20px;transition:background .2s,transform .15s;display:flex;align-items:center;justify-content:center}
+.product-add:hover{background:var(--rust);transform:scale(1.1)}
+
+/* CATEGORIES */
+.categories{padding:0 56px 80px}
+.cat-grid{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:220px 220px;gap:16px}
+.cat-card{position:relative;overflow:hidden;cursor:pointer;display:flex;align-items:flex-end;padding:28px}
+.cat-card:first-child{grid-row:1/3}
+.cat-bg{position:absolute;inset:0;transition:transform .4s}
+.cat-card:hover .cat-bg{transform:scale(1.04)}
+.cat-content{position:relative;z-index:1}
+.cat-emoji{font-size:36px;display:block;margin-bottom:8px}
+.cat-name{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:var(--cream)}
+.cat-count{font-size:12px;color:rgba(245,240,232,.65);letter-spacing:1px;text-transform:uppercase}
+
+/* PROMO */
+.promo-banner{margin:0 56px 80px;background:var(--blue);padding:60px 80px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden}
+.promo-banner::before{content:'50%';font-family:'Bebas Neue',sans-serif;font-size:300px;color:rgba(255,255,255,.05);position:absolute;right:-20px;top:-60px;pointer-events:none;line-height:1}
+.promo-badge{background:var(--yellow);color:var(--ink);font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:2px;padding:6px 16px;display:inline-block;margin-bottom:16px}
+.promo-title{font-family:'DM Serif Display',serif;font-size:48px;color:var(--cream);line-height:1.1}
+.promo-title em{font-style:italic;color:var(--yellow)}
+.promo-right{position:relative;z-index:1;text-align:right}
+.promo-cta{display:inline-block;background:var(--yellow);color:var(--ink);border:none;font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;letter-spacing:.5px;text-transform:uppercase;padding:16px 36px;transition:background .2s,transform .2s;cursor:pointer}
+.promo-cta:hover{background:#e6b800;transform:scale(1.03)}
+.promo-emoji{font-size:80px;display:block;margin-bottom:12px;animation:float 3s ease-in-out infinite}
+
+/* NEW ARRIVALS */
+.new-arrivals{padding:0 56px 80px}
+.arrivals-scroll{display:flex;gap:20px;overflow-x:auto;padding-bottom:16px;scrollbar-width:thin;scrollbar-color:var(--ink) transparent}
+.arrival-card{flex:0 0 240px;cursor:pointer}
+.arrival-img{height:240px;width:240px;display:flex;align-items:center;justify-content:center;font-size:80px;margin-bottom:16px;position:relative;overflow:hidden;transition:transform .3s}
+.arrival-card:hover .arrival-img{transform:scale(1.02)}
+.arrival-new-badge{position:absolute;top:12px;left:12px;background:var(--sage);color:var(--cream);font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:4px 10px}
+
+/* FOOTER */
+footer{background:var(--ink);color:var(--cream);padding:60px 56px 32px}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:56px}
+.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:4px;color:var(--yellow);margin-bottom:16px}
+.footer-tagline{font-size:14px;color:rgba(245,240,232,.5);line-height:1.6;max-width:260px}
+.footer-col h4{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--yellow);margin-bottom:20px}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.footer-col a{font-size:14px;color:rgba(245,240,232,.6);text-decoration:none;transition:color .2s}
+.footer-col a:hover{color:var(--cream)}
+.footer-bottom{border-top:1px solid rgba(245,240,232,.1);padding-top:28px;display:flex;justify-content:space-between;align-items:center}
+.footer-copy{font-size:12px;color:rgba(245,240,232,.35)}
+.footer-socials{display:flex;gap:16px}
+.social-btn{width:36px;height:36px;border:1px solid rgba(245,240,232,.2);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;transition:border-color .2s,background .2s;text-decoration:none;color:var(--cream)}
+.social-btn:hover{border-color:var(--yellow);background:rgba(245,200,66,.1)}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;right:28px;background:var(--ink);color:var(--cream);padding:16px 24px;font-size:14px;font-weight:500;transform:translateY(80px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);z-index:1000;display:flex;align-items:center;gap:12px;max-width:320px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast-icon{font-size:18px}
+
+/* OVERLAY */
+.overlay{position:fixed;inset:0;background:rgba(15,14,12,.5);z-index:300;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(2px)}
+.overlay.show{opacity:1;pointer-events:all}
+
+/* AUTH MODAL */
+.auth-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-60%);z-index:400;background:var(--cream);width:440px;max-width:95vw;padding:48px 40px;opacity:0;pointer-events:none;transition:all .35s cubic-bezier(.34,1.2,.64,1)}
+.auth-modal.show{opacity:1;pointer-events:all;transform:translate(-50%,-50%)}
+.modal-close{position:absolute;top:16px;right:20px;background:none;border:none;font-size:22px;cursor:pointer;opacity:.4;transition:opacity .2s;color:var(--ink)}
+.modal-close:hover{opacity:1}
+.modal-tabs{display:flex;margin-bottom:32px;border-bottom:2px solid var(--border)}
+.modal-tab{background:none;border:none;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;padding:10px 0;margin-right:28px;opacity:.4;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s;color:var(--ink)}
+.modal-tab.active{opacity:1;border-bottom-color:var(--rust);color:var(--rust)}
+.modal-title{font-family:'DM Serif Display',serif;font-size:32px;margin-bottom:8px}
+.modal-sub{font-size:14px;color:rgba(15,14,12,.5);margin-bottom:28px}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;opacity:.7}
+.field input{width:100%;border:1.5px solid var(--border);background:#fff;padding:12px 16px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;transition:border-color .2s}
+.field input:focus{border-color:var(--rust)}
+.auth-err{font-size:13px;color:var(--rust);margin-bottom:14px;min-height:20px}
+.auth-submit{width:100%;background:var(--ink);color:var(--cream);border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;letter-spacing:1px;text-transform:uppercase;padding:16px;transition:background .2s;margin-top:4px}
+.auth-submit:hover{background:var(--rust)}
+
+/* CART DRAWER */
+.cart-drawer{position:fixed;right:-480px;top:0;bottom:0;width:440px;max-width:95vw;background:var(--cream);z-index:400;display:flex;flex-direction:column;transition:right .35s cubic-bezier(.4,0,.2,1);box-shadow:-4px 0 32px rgba(0,0,0,.15)}
+.cart-drawer.open{right:0}
+.cart-head{background:var(--ink);color:var(--cream);padding:20px 28px;display:flex;align-items:center;justify-content:space-between}
+.cart-head-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px}
+.cart-close{background:none;border:none;color:var(--cream);font-size:24px;cursor:pointer;opacity:.6;transition:opacity .2s}
+.cart-close:hover{opacity:1}
+.cart-body{flex:1;overflow-y:auto;padding:24px 28px}
+.cart-empty{text-align:center;padding:60px 20px;color:rgba(15,14,12,.4)}
+.cart-empty-icon{font-size:64px;display:block;margin-bottom:16px}
+.cart-empty p{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:8px;color:var(--ink)}
+.cart-empty small{font-size:14px}
+.cart-item{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--border);align-items:center}
+.cart-item-emoji{width:64px;height:64px;display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0;border-radius:4px}
+.cart-item-info{flex:1}
+.cart-item-name{font-family:'DM Serif Display',serif;font-size:15px;margin-bottom:4px}
+.cart-item-price{font-size:14px;font-weight:600;color:var(--rust)}
+.cart-item-qty{display:flex;align-items:center;gap:8px;margin-top:8px}
+.qty-btn{width:26px;height:26px;border:1.5px solid var(--border);background:none;cursor:pointer;font-size:16px;font-weight:600;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.qty-btn:hover{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+.qty-val{font-size:14px;font-weight:600;min-width:20px;text-align:center}
+.cart-item-del{background:none;border:none;cursor:pointer;font-size:16px;opacity:.3;transition:opacity .2s;padding:4px}
+.cart-item-del:hover{opacity:1}
+.cart-foot{padding:24px 28px;border-top:2px solid var(--border)}
+.cart-row{display:flex;justify-content:space-between;font-size:14px;margin-bottom:10px}
+.cart-total{display:flex;justify-content:space-between;font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:20px;padding-top:10px;border-top:1px solid var(--border)}
+.checkout-btn{width:100%;background:var(--rust);color:var(--cream);border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;letter-spacing:1px;text-transform:uppercase;padding:18px;transition:background .2s}
+.checkout-btn:hover{background:#a83a20}
+
+/* USER DROPDOWN */
+.user-menu{position:relative}
+.user-dropdown{position:absolute;top:calc(100% + 12px);right:0;background:var(--cream);border:1.5px solid var(--border);min-width:210px;display:none;z-index:500;box-shadow:0 8px 32px rgba(0,0,0,.12)}
+.user-dropdown.open{display:block}
+.user-dd-header{padding:16px 18px;border-bottom:1px solid var(--border)}
+.user-dd-name{font-family:'DM Serif Display',serif;font-size:17px}
+.user-dd-email{font-size:12px;color:rgba(15,14,12,.45);margin-top:2px}
+.user-dropdown a,.user-dropdown button.dd-link{display:block;width:100%;text-align:left;padding:12px 18px;font-size:14px;color:var(--ink);text-decoration:none;background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s}
+.user-dropdown a:hover,.user-dropdown button.dd-link:hover{background:rgba(15,14,12,.05)}
+.dd-logout{color:var(--rust)!important;border-top:1px solid var(--border)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">OddMart</div>
+  <ul class="nav-links">
+    <li><a href="#">New</a></li>
+    <li><a href="#">Sale</a></li>
+    <li><a href="#">Random Pick</a></li>
+    <li><a href="#">Bundles</a></li>
+  </ul>
+  <div class="nav-actions">
+    <div class="user-menu" id="userMenu">
+      <button id="navAccountBtn" onclick="toggleUserMenu()">Sign In</button>
+      <div class="user-dropdown" id="userDropdown">
+        <div class="user-dd-header">
+          <div class="user-dd-name" id="ddName">—</div>
+          <div class="user-dd-email" id="ddEmail">—</div>
+        </div>
+        <a href="#">My Orders</a>
+        <a href="#">Wishlist</a>
+        <a href="#">Settings</a>
+        <button class="dd-link dd-logout" onclick="logout()">Sign Out</button>
+      </div>
+    </div>
+    <button id="navCartBtn" onclick="openCart()">
+      🛒 Cart (<span id="cartCount">0</span>)
+      <span class="cart-badge" id="cartBadge"></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-tag">Spring Collection 2026</p>
+    <h1 class="hero-title">Life's Too Short<br>For <em>Boring</em><br>Stuff.</h1>
+    <p class="hero-desc">We sell the products nobody asked for but everybody needs. Curated with zero logic, maximum delight.</p>
+    <a href="#featured" class="hero-cta">Shop the Chaos <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </div>
+  <div class="hero-right">
+    <div class="hero-badge">⚡<span>NEW</span>DROP</div>
+    <div class="hero-showcase">
+      <span class="hero-emoji" id="heroEmoji">🪐</span>
+      <p class="hero-label" id="heroLabel">Miniature Saturn</p>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker"><div class="ticker-track" id="ticker"></div></div>
+
+<!-- FEATURED -->
+<section class="featured" id="featured">
+  <div class="section-header">
+    <h2 class="section-title">Fan Favourites</h2>
+    <a href="#" class="section-link">See All →</a>
+  </div>
+  <div class="product-grid" id="productGrid"></div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="categories">
+  <div class="section-header">
+    <h2 class="section-title">Shop By Vibe</h2>
+    <a href="#" class="section-link">All Categories →</a>
+  </div>
+  <div class="cat-grid">
+    <div class="cat-card"><div class="cat-bg" style="background:linear-gradient(135deg,#2d4b2d,#7a9e7e)"></div><div class="cat-content"><span class="cat-emoji">🛋️</span><div class="cat-name">Cozy & Weird</div><div class="cat-count">142 products</div></div></div>
+    <div class="cat-card"><div class="cat-bg" style="background:linear-gradient(135deg,#2d3a8e,#6b7fd4)"></div><div class="cat-content"><span class="cat-emoji">🔌</span><div class="cat-name">Gadget Chaos</div><div class="cat-count">87 products</div></div></div>
+    <div class="cat-card"><div class="cat-bg" style="background:linear-gradient(135deg,#8e2d6b,#d47fb8)"></div><div class="cat-content"><span class="cat-emoji">🎪</span><div class="cat-name">Pure Joy</div><div class="cat-count">203 products</div></div></div>
+    <div class="cat-card"><div class="cat-bg" style="background:linear-gradient(135deg,#5a3e1b,#c47a2e)"></div><div class="cat-content"><span class="cat-emoji">🌱</span><div class="cat-name">Eco Oddities</div><div class="cat-count">61 products</div></div></div>
+    <div class="cat-card"><div class="cat-bg" style="background:linear-gradient(135deg,#8e2d2d,#d47f7f)"></div><div class="cat-content"><span class="cat-emoji">🍜</span><div class="cat-name">Kitchen Nonsense</div><div class="cat-count">119 products</div></div></div>
+  </div>
+</section>
+
+<!-- PROMO -->
+<div class="promo-banner">
+  <div>
+    <div class="promo-badge">This Weekend Only</div>
+    <h2 class="promo-title">Half the Price,<br><em>Double the Weird.</em></h2>
+  </div>
+  <div class="promo-right">
+    <span class="promo-emoji">🎁</span>
+    <button class="promo-cta" onclick="showToast('🎉','Sale applied! 50% off everything!')">Claim 50% Off</button>
+  </div>
+</div>
+
+<!-- NEW ARRIVALS -->
+<section class="new-arrivals">
+  <div class="section-header">
+    <h2 class="section-title">Just Landed</h2>
+    <a href="#" class="section-link">View All →</a>
+  </div>
+  <div class="arrivals-scroll" id="arrivalsGrid"></div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-logo">OddMart</div>
+      <p class="footer-tagline">Bringing the world's most unnecessary yet irresistible products straight to your door. No regrets (probably).</p>
+    </div>
+    <div class="footer-col"><h4>Shop</h4><ul><li><a href="#">New Arrivals</a></li><li><a href="#">Best Sellers</a></li><li><a href="#">Sale Items</a></li><li><a href="#">Gift Cards</a></li></ul></div>
+    <div class="footer-col"><h4>Help</h4><ul><li><a href="#">FAQ</a></li><li><a href="#">Shipping</a></li><li><a href="#">Returns</a></li><li><a href="#">Contact</a></li></ul></div>
+    <div class="footer-col"><h4>Company</h4><ul><li><a href="#">About OddMart</a></li><li><a href="#">Careers</a></li><li><a href="#">Press</a></li><li><a href="#">Blog</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2026 OddMart Inc. Weirdness is our policy.</p>
+    <div class="footer-socials">
+      <a class="social-btn" href="#">𝕏</a>
+      <a class="social-btn" href="#">in</a>
+      <a class="social-btn" href="#">ig</a>
+      <a class="social-btn" href="#">▶</a>
+    </div>
+  </div>
+</footer>
+
+<!-- OVERLAY -->
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
+
+<!-- AUTH MODAL -->
+<div class="auth-modal" id="authModal">
+  <button class="modal-close" onclick="closeAll()">✕</button>
+  <div class="modal-tabs">
+    <button class="modal-tab active" id="tabLogin" onclick="switchTab('login')">Sign In</button>
+    <button class="modal-tab" id="tabRegister" onclick="switchTab('register')">Create Account</button>
+  </div>
+  <div id="loginForm">
+    <h2 class="modal-title">Welcome back.</h2>
+    <p class="modal-sub">Sign in to access your cart and orders.</p>
+    <div class="field"><label>Email</label><input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email"></div>
+    <div class="field"><label>Password</label><input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <div class="auth-err" id="loginErr"></div>
+    <button class="auth-submit" onclick="doLogin()">Sign In →</button>
+  </div>
+  <div id="registerForm" style="display:none">
+    <h2 class="modal-title">Join the Odd Club.</h2>
+    <p class="modal-sub">Create a free account to save your cart and track orders.</p>
+    <div class="field"><label>Full Name</label><input type="text" id="regName" placeholder="Your Name" autocomplete="name"></div>
+    <div class="field"><label>Email</label><input type="email" id="regEmail" placeholder="you@example.com" autocomplete="email"></div>
+    <div class="field"><label>Password</label><input type="password" id="regPass" placeholder="Min. 6 characters" autocomplete="new-password" onkeydown="if(event.key==='Enter')doRegister()"></div>
+    <div class="auth-err" id="registerErr"></div>
+    <button class="auth-submit" onclick="doRegister()">Create Account →</button>
+  </div>
+</div>
+
+<!-- CART DRAWER -->
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-head">
+    <span class="cart-head-title">Your Cart 🛒</span>
+    <button class="cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-body" id="cartBody"></div>
+  <div class="cart-foot" id="cartFoot" style="display:none">
+    <div class="cart-row"><span>Subtotal</span><span id="cartSubtotal">$0.00</span></div>
+    <div class="cart-row"><span>Shipping</span><span id="cartShipping">Free</span></div>
+    <div class="cart-total"><span>Total</span><span id="cartTotal">$0.00</span></div>
+    <button class="checkout-btn" onclick="doCheckout()">Checkout →</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span class="toast-icon" id="toastIcon">✓</span><span id="toastMsg"></span></div>
+
+<script>
+// ── DATA ──
+const products = [
+  {id:'p1',emoji:'🪴',tag:'Botany',      name:'Cactus That Judges You',    sub:'Sentient prickle edition',       price:24.99,bg:'#e8f4e8'},
+  {id:'p2',emoji:'🕰️',tag:'Timekeeping',name:'Backwards Clock',            sub:'For when life goes in reverse',  price:39.99,bg:'#e8eaf4'},
+  {id:'p3',emoji:'🦆',tag:'Aquatics',    name:'Philosophical Duck',          sub:'Asks why. Provides no answers.', price:14.99,bg:'#f4f0e0'},
+  {id:'p4',emoji:'🧲',tag:'Science-ish', name:'Invisible Magnet',            sub:"Feel the force you can't see",   price:8.99, bg:'#f4e0e8'},
+  {id:'p5',emoji:'🌡️',tag:'Wellness',   name:'Mood Ring Thermometer',       sub:'Your feelings, in Fahrenheit',  price:19.99,bg:'#e0f4f0'},
+  {id:'p6',emoji:'🎩',tag:'Accessories', name:'Hat For Your Hat',            sub:'Hattception — infinite style',   price:12.99,bg:'#f0e0f4'},
+  {id:'p7',emoji:'🔮',tag:'Mystical',    name:'Fortune Cookie Lamp',         sub:'Illuminating wisdom since 2026', price:54.99,bg:'#fff3e0'},
+  {id:'p8',emoji:'🧸',tag:'Comfort',     name:'Existential Bear',            sub:'He knows. He accepts. He hugs.', price:34.99,bg:'#fce4ec'},
+];
+const arrivals = [
+  {id:'a1',emoji:'🛸',name:'UFO Night Light',       sub:'Abduction-free sleeping',     price:29.99,bg:'#e8eaf4'},
+  {id:'a2',emoji:'🍄',name:'Moody Mushroom Plush',  sub:"It's having a moment",        price:18.99,bg:'#e8f4e8'},
+  {id:'a3',emoji:'⛏️',name:'Tiny Mining Kit',        sub:'Dig for desk treasures',      price:22.99,bg:'#fff3e0'},
+  {id:'a4',emoji:'🌊',name:'Desktop Wave Machine',  sub:'Zen, on a deadline',           price:44.99,bg:'#e0f4f0'},
+  {id:'a5',emoji:'🦋',name:'Butterfly Effect Jar',  sub:'Scientifically questionable',  price:16.99,bg:'#fce4ec'},
+  {id:'a6',emoji:'🪬',name:'Evil Eye Blender',       sub:'Smoothies with protection',   price:89.99,bg:'#f0e0f4'},
+];
+const allProducts = [...products,...arrivals];
+
+// ── STORAGE HELPERS ──
+const getUsers = () => { try{return JSON.parse(localStorage.getItem('om_users')||'{}')}catch{return{}} };
+const saveUsers = u => localStorage.setItem('om_users', JSON.stringify(u));
+const getSession = () => { try{return JSON.parse(localStorage.getItem('om_sess')||'null')}catch{return null} };
+const saveSession = s => localStorage.setItem('om_sess', JSON.stringify(s));
+const clearSession = () => localStorage.removeItem('om_sess');
+const getGuestCart = () => { try{return JSON.parse(localStorage.getItem('om_guest')||'[]')}catch{return[]} };
+const saveGuestCart = c => localStorage.setItem('om_guest', JSON.stringify(c));
+
+function simpleHash(s){let h=0;for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0;}return h.toString(36)}
+
+function getCart(){
+  const s=getSession();
+  if(s){const u=getUsers();return(u[s.email]&&u[s.email].cart)||[]}
+  return getGuestCart();
+}
+function saveCart(cart){
+  const s=getSession();
+  if(s){const u=getUsers();if(u[s.email])u[s.email].cart=cart;saveUsers(u);}
+  else saveGuestCart(cart);
+}
+
+// ── AUTH ──
+function doLogin(){
+  const email=document.getElementById('loginEmail').value.trim().toLowerCase();
+  const pass=document.getElementById('loginPass').value;
+  const err=document.getElementById('loginErr');
+  err.textContent='';
+  if(!email||!pass){err.textContent='Please fill in all fields.';return}
+  const u=getUsers();
+  if(!u[email]){err.textContent='No account found with that email.';return}
+  if(u[email].passwordHash!==simpleHash(pass)){err.textContent='Incorrect password.';return}
+  // merge guest cart
+  const g=getGuestCart();
+  if(g.length){
+    const uc=u[email].cart||[];
+    g.forEach(gi=>{const ex=uc.find(c=>c.id===gi.id);if(ex)ex.qty+=gi.qty;else uc.push({...gi})});
+    u[email].cart=uc;saveUsers(u);saveGuestCart([]);
+  }
+  saveSession({email,name:u[email].name});
+  closeAll();updateNavAuth();renderCart();updateCartCount();
+  showToast('👋',`Welcome back, ${u[email].name.split(' ')[0]}!`);
+}
+
+function doRegister(){
+  const name=document.getElementById('regName').value.trim();
+  const email=document.getElementById('regEmail').value.trim().toLowerCase();
+  const pass=document.getElementById('regPass').value;
+  const err=document.getElementById('registerErr');
+  err.textContent='';
+  if(!name||!email||!pass){err.textContent='Please fill in all fields.';return}
+  if(pass.length<6){err.textContent='Password must be at least 6 characters.';return}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){err.textContent='Please enter a valid email.';return}
+  const u=getUsers();
+  if(u[email]){err.textContent='An account with this email already exists.';return}
+  const g=getGuestCart();
+  u[email]={name,email,passwordHash:simpleHash(pass),cart:g.length?g:[]};
+  saveUsers(u);saveGuestCart([]);saveSession({email,name});
+  closeAll();updateNavAuth();renderCart();updateCartCount();
+  showToast('🎉',`Welcome to OddMart, ${name.split(' ')[0]}!`);
+}
+
+function logout(){
+  clearSession();closeAll();updateNavAuth();renderCart();updateCartCount();
+  showToast('👋',"You've been signed out.");
+}
+
+function updateNavAuth(){
+  const s=getSession();
+  const btn=document.getElementById('navAccountBtn');
+  if(s){
+    btn.textContent=s.name.split(' ')[0];
+    document.getElementById('ddName').textContent=s.name;
+    document.getElementById('ddEmail').textContent=s.email;
+  } else {
+    btn.textContent='Sign In';
+  }
+}
+
+function toggleUserMenu(){
+  if(!getSession()){openAuth('login');return}
+  document.getElementById('userDropdown').classList.toggle('open');
+}
+
+// ── CART ──
+function addToCart(id){
+  const cart=getCart();
+  const ex=cart.find(c=>c.id===id);
+  if(ex)ex.qty++;else cart.push({id,qty:1});
+  saveCart(cart);updateCartCount();
+  const p=allProducts.find(p=>p.id===id);
+  if(p)showToast(p.emoji,`${p.name} added to cart!`);
+}
+
+function removeFromCart(id){
+  saveCart(getCart().filter(c=>c.id!==id));
+  updateCartCount();renderCart();
+}
+
+function changeQty(id,d){
+  const cart=getCart();
+  const item=cart.find(c=>c.id===id);
+  if(!item)return;
+  item.qty+=d;
+  if(item.qty<=0){removeFromCart(id);return}
+  saveCart(cart);updateCartCount();renderCart();
+}
+
+function updateCartCount(){
+  const n=getCart().reduce((s,c)=>s+c.qty,0);
+  document.getElementById('cartCount').textContent=n;
+  const badge=document.getElementById('cartBadge');
+  if(n>0){badge.style.display='flex';badge.textContent=n;}
+  else badge.style.display='none';
+}
+
+function renderCart(){
+  const cart=getCart();
+  const body=document.getElementById('cartBody');
+  const foot=document.getElementById('cartFoot');
+  if(!cart.length){
+    body.innerHTML=`<div class="cart-empty"><span class="cart-empty-icon">🛒</span><p>Your cart is empty</p><small>Find something delightfully odd above!</small></div>`;
+    foot.style.display='none';return;
+  }
+  let sub=0;
+  body.innerHTML=cart.map(item=>{
+    const p=allProducts.find(p=>p.id===item.id);if(!p)return'';
+    sub+=p.price*item.qty;
+    return `<div class="cart-item">
+      <div class="cart-item-emoji" style="background:${p.bg}">${p.emoji}</div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${p.name}</div>
+        <div class="cart-item-price">$${(p.price*item.qty).toFixed(2)} <span style="font-weight:400;color:rgba(15,14,12,.4);font-size:12px">($${p.price.toFixed(2)} ea)</span></div>
+        <div class="cart-item-qty">
+          <button class="qty-btn" onclick="changeQty('${p.id}',-1)">−</button>
+          <span class="qty-val">${item.qty}</span>
+          <button class="qty-btn" onclick="changeQty('${p.id}',1)">+</button>
+        </div>
+      </div>
+      <button class="cart-item-del" onclick="removeFromCart('${p.id}')" title="Remove">🗑</button>
+    </div>`;
+  }).join('');
+  const ship=sub>=50?0:4.99;const total=sub+ship;
+  document.getElementById('cartSubtotal').textContent=`$${sub.toFixed(2)}`;
+  document.getElementById('cartShipping').textContent=ship===0?'Free 🎉':`$${ship.toFixed(2)}`;
+  document.getElementById('cartTotal').textContent=`$${total.toFixed(2)}`;
+  foot.style.display='block';
+}
+
+function doCheckout(){
+  if(!getSession()){
+    closeCart();openAuth('login');
+    showToast('🔐','Sign in to complete your purchase!');return;
+  }
+  showToast('🎉','Order placed! Thanks for shopping OddMart 🎊');
+  saveCart([]);updateCartCount();renderCart();
+}
+
+// ── UI ──
+function openAuth(tab='login'){
+  switchTab(tab);
+  document.getElementById('authModal').classList.add('show');
+  document.getElementById('overlay').classList.add('show');
+}
+function openCart(){
+  renderCart();
+  document.getElementById('cartDrawer').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+}
+function closeCart(){
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+function closeAll(){
+  document.getElementById('authModal').classList.remove('show');
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+  document.getElementById('userDropdown').classList.remove('open');
+}
+function switchTab(tab){
+  const isL=tab==='login';
+  document.getElementById('tabLogin').classList.toggle('active',isL);
+  document.getElementById('tabRegister').classList.toggle('active',!isL);
+  document.getElementById('loginForm').style.display=isL?'block':'none';
+  document.getElementById('registerForm').style.display=isL?'none':'block';
+  document.getElementById('loginErr').textContent='';
+  document.getElementById('registerErr').textContent='';
+}
+
+document.addEventListener('click',e=>{
+  const m=document.getElementById('userMenu');
+  if(!m.contains(e.target)) document.getElementById('userDropdown').classList.remove('open');
+});
+
+let _tt;
+function showToast(icon,msg){
+  clearTimeout(_tt);
+  document.getElementById('toastIcon').textContent=icon;
+  document.getElementById('toastMsg').textContent=msg;
+  document.getElementById('toast').classList.add('show');
+  _tt=setTimeout(()=>document.getElementById('toast').classList.remove('show'),2800);
+}
+
+// ── BUILD PAGE ──
+const tItems=['Free shipping over $50','New drops every Friday','Returns made easy','10,000+ happy weirdos','Ethically sourced oddities','Mystery boxes available','Gift wrapping included','Carbon-neutral delivery'];
+document.getElementById('ticker').innerHTML=[...tItems,...tItems].map(t=>`<div class="ticker-item"><span class="ticker-dot"></span>${t}</div>`).join('');
+
+document.getElementById('productGrid').innerHTML=products.map((p,i)=>`
+  <div class="product-card" style="animation:fadeUp .5s ease ${i*.08}s both">
+    <div class="product-img" style="background:${p.bg}"><span>${p.emoji}</span></div>
+    <p class="product-tag">${p.tag}</p>
+    <h3 class="product-name">${p.name}</h3>
+    <p class="product-sub">${p.sub}</p>
+    <div class="product-bottom">
+      <span class="product-price">$${p.price.toFixed(2)}</span>
+      <button class="product-add" onclick="addToCart('${p.id}')">+</button>
+    </div>
+  </div>`).join('');
+
+document.getElementById('arrivalsGrid').innerHTML=arrivals.map(p=>`
+  <div class="arrival-card">
+    <div class="arrival-img" style="background:${p.bg}">
+      <div class="arrival-new-badge">New</div>
+      <span style="font-size:80px">${p.emoji}</span>
+    </div>
+    <p class="product-tag" style="color:var(--rust)">New Arrival</p>
+    <h3 class="product-name">${p.name}</h3>
+    <p class="product-sub">${p.sub}</p>
+    <div class="product-bottom">
+      <span class="product-price">$${p.price.toFixed(2)}</span>
+      <button class="product-add" onclick="addToCart('${p.id}')">+</button>
+    </div>
+  </div>`).join('');
+
+// Rotating hero
+const heroP=[{emoji:'🪐',label:'Miniature Saturn'},{emoji:'🦕',label:'Dino Desk Buddy'},{emoji:'🔭',label:'Pocket Telescope'},{emoji:'🧿',label:'Anti-Anxiety Orb'},{emoji:'🪄',label:'Magic Wand (Mostly)'}];
+let hi=0;
+setInterval(()=>{
+  hi=(hi+1)%heroP.length;
+  const e=document.getElementById('heroEmoji'),l=document.getElementById('heroLabel');
+  e.style.transform='scale(0)';e.style.opacity='0';
+  setTimeout(()=>{e.textContent=heroP[hi].emoji;l.textContent=heroP[hi].label;e.style.transform='scale(1)';e.style.opacity='1'},250);
+},2500);
+
+// Init
+updateNavAuth();
+updateCartCount();
+</script>
+</body>
+</html>
